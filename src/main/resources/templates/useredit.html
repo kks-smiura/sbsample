@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
-<script src="https://unpkg.com"></script>    
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,8 +14,7 @@
 <body class="bg-sky-50 text-slate-800 min-h-screen flex flex-col antialiased">
 
     <!-- Vue アプリケーションのルート要素 -->
-    <div id="app" class="flex-grow flex flex-col" v-cloak>
-        
+    <div class="flex-grow flex flex-col">
         <!-- 1. 画面上部ヘッダー（薄い青系の配色） -->
         <header class="bg-blue-600 text-white shadow-md">
             <div class="max-w-7xl mx-auto px-4 py-5 sm:px-6 lg:px-8 flex justify-between items-center">
@@ -31,9 +29,12 @@
 
         <!-- メインコンテンツエリア -->
         <main class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 flex-grow w-full">
-            <!-- UserEditForm.vue コンポーネントがここにマウントされます -->
-            <script type="module" src="./assets/UserEditForm.js"></script>
+            <!-- Vueコンポーネントのマウント先 -->
+            <div id="vue-content" v-cloak>
+                <user-edit-form></user-edit-form>
+            </div>
         </main>
+
         <!-- フッター -->
         <footer class="bg-slate-100 border-t border-slate-200 py-4">
             <div id="footer" class="max-w-7xl mx-auto px-4 text-center text-sm text-slate-500">
@@ -41,13 +42,29 @@
             </div>
         </footer>
     </div>
+
+    <script type="module">
+        // Vueアプリケーションを初期化
+        // defineAsyncComponent を追加でインポートします
+        const { createApp, defineAsyncComponent } = Vue;
+
+        // UserEditFormコンポーネントを動的にインポート
+        // defineAsyncComponentでラップすることで、Vueが正しく非同期コンポーネントとして扱えるようになります
+        const UserEditFormComponent = defineAsyncComponent(() => 
+            import("[[@{/assets/UserEditForm.js}]]"));
+
+        const app = createApp({
+            components: {
+                'user-edit-form': UserEditFormComponent
+            }
+        });
+        app.mount('#vue-content');
+    </script>
     <!-- 読み込み前のチラつき(マスタッシュの露出)を防ぐためのスタイル -->
-    <!--
     <style>
         [v-cloak] {
             display: none;
         }
     </style>
-    -->
 </body>
 </html>

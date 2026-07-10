@@ -29,10 +29,9 @@
 
         <!-- メインコンテンツエリア -->
         <main class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 flex-grow w-full">
-            <div class="text-center">
-                <a th:href="@{/useredit}" class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-300">
-                    Go UserEdit
-                </a>
+            <!-- Vueコンポーネントのマウント先 -->
+            <div id="vue-content" v-cloak>
+                <user-edit-form></user-edit-form>
             </div>
         </main>
 
@@ -49,11 +48,5 @@
             display: none;
         }
     </style>
-    <script>
-        const { createApp } = Vue;
-        // このページではVueコンポーネントを使わないため、
-        // 空のアプリケーションをマウントするだけにしておきます。
-        createApp({}).mount('.flex-grow');
-    </script>
 </body>
 </html>
