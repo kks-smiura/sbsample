@@ -6,13 +6,10 @@
     <title>SpringBoot + Vue サンプル</title>
     <!-- Tailwind CSS (CDN) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Vue 3 (CDN) -->
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <!-- http-vue-loader (SFCを動的にロードするためのライブラリ) -->
-    <script src="https://unpkg.com/vue3-sfc-loader"></script>
+    <link rel="stylesheet" th:href="@{/assets/index.css}">
+    <script type="module" th:src="@{/assets/index.js}"></script>
 </head>
-<body class="bg-sky-50 text-slate-800 min-h-screen flex flex-col antialiased">
-
+<body>
     <!-- Vue アプリケーションのルート要素 -->
     <div class="flex-grow flex flex-col">
         <!-- 1. 画面上部ヘッダー（薄い青系の配色） -->
@@ -26,15 +23,7 @@
                 </span>
             </div>
         </header>
-
-        <!-- メインコンテンツエリア -->
-        <main class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 flex-grow w-full">
-            <!-- Vueコンポーネントのマウント先 -->
-            <div id="vue-content" v-cloak>
-                <user-edit-form></user-edit-form>
-            </div>
-        </main>
-
+        <div id="content"></div>
         <!-- フッター -->
         <footer class="bg-slate-100 border-t border-slate-200 py-4">
             <div id="footer" class="max-w-7xl mx-auto px-4 text-center text-sm text-slate-500">
@@ -42,29 +31,5 @@
             </div>
         </footer>
     </div>
-
-    <script type="module">
-        // Vueアプリケーションを初期化
-        // defineAsyncComponent を追加でインポートします
-        const { createApp, defineAsyncComponent } = Vue;
-
-        // UserEditFormコンポーネントを動的にインポート
-        // defineAsyncComponentでラップすることで、Vueが正しく非同期コンポーネントとして扱えるようになります
-        const UserEditFormComponent = defineAsyncComponent(() => 
-            import("[[@{/assets/UserEditForm.js}]]"));
-
-        const app = createApp({
-            components: {
-                'user-edit-form': UserEditFormComponent
-            }
-        });
-        app.mount('#vue-content');
-    </script>
-    <!-- 読み込み前のチラつき(マスタッシュの露出)を防ぐためのスタイル -->
-    <style>
-        [v-cloak] {
-            display: none;
-        }
-    </style>
 </body>
 </html>

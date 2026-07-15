@@ -4,8 +4,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class SbSampleController {
@@ -23,12 +21,27 @@ public class SbSampleController {
      * これにより、クライアントサイドのVue RouterがURLを解釈して
      * 適切なコンポーネント（UserEditForm.vue）を表示します。
      * @param model ビューに渡すモデル
-     * @return ビュー名 (hello.html)
+     * @return ビュー名 (useredit.html)
      */
     @GetMapping("/useredit")
     public String useredit(Model model) {
         // 必要に応じて、ビューに渡すメッセージなどを設定できます
         model.addAttribute("msg", "ユーザー編集画面");
+        return "useredit"; // Vueアプリがマウントされるuseredit.htmlを返す
+    }
+
+    /**
+     * /useredit パスへのリクエストを処理し、Vue.jsアプリケーションを
+     * 読み込むためのビューを返します。
+     * これにより、クライアントサイドのVue RouterがURLを解釈して
+     * 適切なコンポーネント（UserEditForm.vue）を表示します。
+     * @param model ビューに渡すモデル
+     * @return ビュー名 (useredit.html)
+     */
+    @GetMapping("/usersearch")
+    public String usersearch(Model model) {
+        // 必要に応じて、ビューに渡すメッセージなどを設定できます
+        model.addAttribute("msg", "ユーザー検索画面");
         return "useredit"; // Vueアプリがマウントされるuseredit.htmlを返す
     }
 

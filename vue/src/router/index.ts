@@ -1,6 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import UserEditForm from '../views/UserEditForm.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -8,12 +6,17 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: () => import('@/views/HomeView.vue')
     },
     {
-      path: '/useredit', // /useredit のURLでUserEditFormコンポーネントを表示
+      path: '/useredit', // useredit のURLでUserEditFormコンポーネントを表示
       name: 'useredit',
-      component: UserEditForm
+      component: () => import('@/views/UserEditForm.vue')                                                                                      
+    },
+    {
+      path: '/usersearch', // /usersearch のURLでUserSearchListFormコンポーネントを表示
+      name: 'usersearch',
+      component: () => import('@/views/UserSearchListForm.vue')
     }
   ]
 })
