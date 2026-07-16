@@ -69,7 +69,8 @@ const CreateUserEditRequestDto = (overrides: Partial<UserEditRequestDto> = {}): 
     departmentname : editForm.value.departmentname,  // 任意項目
     sectionname : editForm.value.sectionname,     // 任意項目
     phone: editForm.value.phone,
-    address: editForm.value.address
+  address: editForm.value.address,
+  ...overrides
 });
 
 // Emitsの定義（型安全なイベント定義）

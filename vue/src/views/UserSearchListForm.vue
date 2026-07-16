@@ -90,6 +90,7 @@ const doSearch = async (): Promise<void> => {
   try {
     console.log('doSearch called with conditions:', conditions.value)
 
+    // searchlist APIにPOSTリクエストを送信
     const response = await axios.post<UserSearchListFormResponseDto>('http://localhost:8080/usersearch/searchlist', {
       userid: normalize(conditions.value.userid),
       username: normalize(conditions.value.username),
