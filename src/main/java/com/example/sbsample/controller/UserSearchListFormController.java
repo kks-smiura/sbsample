@@ -3,8 +3,8 @@ package com.example.sbsample.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.sbsample.dto.UserSearchListFormRequestDto;
-import com.example.sbsample.dto.UserSearchListFormResponseDto;
+import com.example.sbsample.dto.UserSearchListRequestDto;
+import com.example.sbsample.dto.UserSearchListResponseDto;
 import com.example.sbsample.service.UserSearchListService;
 
 @RestController
@@ -23,9 +23,9 @@ public class UserSearchListFormController {
      * URL: POST http://localhost:8080/usersearch/searchlist
      */
     @PostMapping("/searchlist")
-    public ResponseEntity<UserSearchListFormResponseDto> searchList(@RequestBody UserSearchListFormRequestDto request) {
+    public ResponseEntity<UserSearchListResponseDto> searchList(@RequestBody UserSearchListRequestDto request) {
         // Serviceのビジネスロジックを呼び出す
-        UserSearchListFormResponseDto response = userSearchListService.searchList(request);
+        UserSearchListResponseDto response = userSearchListService.searchList(request);
         // HTTPステータス 200 (OK) と一緒に処理結果のJSONを返す
         return ResponseEntity.ok(response);
     }

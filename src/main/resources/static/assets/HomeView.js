@@ -1,1 +1,1 @@
-import{a as e,c as t,r as n}from"./index.js";import{t as r}from"./_plugin-vue_export-helper.js";var i={};function a(r,i){return t(),e(`main`,null,[...i[0]||=[n(`h1`,null,`Home Page`,-1)]])}var o=r(i,[[`render`,a]]);export{o as default};
+import{a as e,g as t,s as n}from"./index.js";import{t as r}from"./_plugin-vue_export-helper.js";var i={};function a(r,i){return t(),n(`main`,null,[...i[0]||=[e(`h1`,null,`Home Page`,-1)]])}var o=r(i,[[`render`,a]]);export{o as default};

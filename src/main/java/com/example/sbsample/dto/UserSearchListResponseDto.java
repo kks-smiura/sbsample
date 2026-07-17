@@ -8,7 +8,7 @@ import lombok.Data;
 // Searchボタン押下時に返却するレスポンスDTOのサンプル
 @Data
 @Builder
-public class UserSearchListFormResponseDto {
+public class UserSearchListResponseDto {
     private int totalCount;
     private String message;
     private List<UserDetail> userList;

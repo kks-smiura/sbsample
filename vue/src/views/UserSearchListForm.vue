@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import axios from "axios";
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 interface UserRow {
   userid: string
@@ -20,7 +20,7 @@ interface SearchConditions {
   address: string
 }
 
-interface UserSearchListFormResponseDto {
+interface UserSearchListResponseDto {
   totalCount: number
   message: string
   userList: UserRow[]
@@ -77,10 +77,20 @@ const allUsers = ref<UserRow[]>([
     sectionname: '品質管理課',
     phone: '092-555-6666',
     address: '福岡県福岡市博多区博多駅前5-5-5'
+  },
+  {
+    userid: 'USR-2026-006',
+    username: '川野 直樹',
+    departmentname: '品質保証本部',
+    sectionname: '品質管理課',
+    phone: '092-555-7777',
+    address: '福岡県福岡市博多区博多駅前6-6-6'
   }
 ])
 
 const displayedUsers = ref<UserRow[]>([...allUsers.value])
+
+const shouldShowVerticalScroll = computed(() => displayedUsers.value.length >= 6)
 
 const normalize = (value: string): string => value.trim()
 
@@ -91,7 +101,7 @@ const doSearch = async (): Promise<void> => {
     console.log('doSearch called with conditions:', conditions.value)
 
     // searchlist APIにPOSTリクエストを送信
-    const response = await axios.post<UserSearchListFormResponseDto>('http://localhost:8080/usersearch/searchlist', {
+    const response = await axios.post<UserSearchListResponseDto>('http://localhost:8080/usersearch/searchlist', {
       userid: normalize(conditions.value.userid),
       username: normalize(conditions.value.username),
       departmentname: normalize(conditions.value.departmentname),
@@ -129,8 +139,11 @@ const doSearch = async (): Promise<void> => {
   }
 }
 
+// Clearボタン押下
 const clearSearch = (): void => {
+  // 検索条件を初期化（defaultConditionsを分解してconditions.valueにコピー）
   conditions.value = { ...defaultConditions }
+  // 検索結果を初期化（allUsers.valueを分解してdisplayedUsers.valueにコピー）
   displayedUsers.value = [...allUsers.value]
 }
 </script>
@@ -187,7 +200,7 @@ const clearSearch = (): void => {
         <span>{{ displayedUsers.length }} 件</span>
       </div>
 
-      <div class="table-wrap">
+      <div class="table-wrap" :class="{ 'table-wrap-scrollable': shouldShowVerticalScroll }">
         <table>
           <thead>
             <tr>
@@ -364,6 +377,11 @@ input:focus {
   border: 1px solid #d4e5f5;
   border-radius: 14px;
   background: rgb(255 255 255 / 85%);
+}
+
+.table-wrap-scrollable {
+  max-height: 240px;
+  overflow-y: auto;
 }
 
 table {

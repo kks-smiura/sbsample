@@ -3,8 +3,8 @@ package com.example.sbsample.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.sbsample.dto.UserEditFormRequestDto;
-import com.example.sbsample.dto.UserEditFormResponseDto;
+import com.example.sbsample.dto.UserEditRequestDto;
+import com.example.sbsample.dto.UserEditResponseDto;
 import com.example.sbsample.service.UserEditService;
 
 @RestController
@@ -23,10 +23,10 @@ public class UserEditFormController {
      * URL: POST http://localhost:8080/useredit/entry
      */
     @PostMapping("/entry")
-    public ResponseEntity<UserEditFormResponseDto> createUser(@RequestBody UserEditFormRequestDto request) {
+    public ResponseEntity<UserEditResponseDto> createUser(@RequestBody UserEditRequestDto request) {
         
         // Serviceのビジネスロジックを呼び出す
-        UserEditFormResponseDto response = userEditService.registUser(request);
+        UserEditResponseDto response = userEditService.registUser(request);
         // HTTPステータス 200 (OK) と一緒に処理結果のJSONを返す
         return ResponseEntity.ok(response);
     }
