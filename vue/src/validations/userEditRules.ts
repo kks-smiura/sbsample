@@ -1,4 +1,6 @@
-// userEditRules.ts
+/**
+ * ユーザー編集フォームとAPI間のデータ変換ユーティリティ
+ */
 import * as yup from 'yup';
 
 // ユーザー編集フォーム用の入力チェックを Yup で定義します。

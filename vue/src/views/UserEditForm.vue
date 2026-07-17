@@ -4,76 +4,18 @@ import type { AxiosError, AxiosResponse } from "axios";
 import { ref } from 'vue';
 import { useField, useForm } from 'vee-validate';
 import { userEditValidationSchema, type UserEditFormValues } from '../validations/userEditRules.ts';
+import type { UserEditType, UserEditResponseDto } from '../types/userEdit';
+import { defaultUser } from '../types/userEdit';
+import { createInitialValues, createUserEditRequestDto } from '../utils/userEditConverters';
 
 // インフォメーションメッセージ
 const infoMessage = ref<string>('');
 const errorMessages = ref<string[]>([]);
 
-// ユーザー情報の型定義
-interface UserEditType {
-  userid: string
-  username: string
-  departmentname: string
-  sectionname?: string
-  phone?: string
-  address?: string
-}
-
-// Propsの定義（TypeScriptの型引数形式）n
-// withDefaultsを使わない形式に変換
+// Propsの定義（TypeScriptの型引数形式）
 const props = defineProps<{
   user?: UserEditType
 }>();
-
-// props.user が提供されない場合のデフォルト値
-const defaultUser: UserEditType = {
-  userid: 'USR-2026-001',
-  username: '山田 太郎',
-  departmentname: '開発本部',
-  sectionname: 'フロントエンド開発課',
-  phone: '03-1234-5678',
-  address: '東京都千代田区大手町1-1-1'
-};
-
-// RequestDTOの定義
-interface UserEditRequestDto {
-    userid: string;
-    username: string;
-    departmentname?: string;  // 任意項目
-    sectionname?: string;     // 任意項目
-    phone?: string;       // 任意項目
-    address?: string;     // 任意項目
-};
-
-// ResponseDTOの定義
-interface UserEditResponseDto {
-    userid: string;
-    username: string;
-    departmentname: string;
-    sectionname: string;
-    phone: string;
-    address: string;
-    resultinformation: string
-};
-
-const createInitialValues = (source: UserEditType): UserEditFormValues => ({
-  userid: source.userid,
-  username: source.username,
-  departmentname: source.departmentname,
-  sectionname: source.sectionname,
-  phone: source.phone ?? '',  // NULLの場合は空文字に変換
-  address: source.address,
-});
-
-// 引数で受け取ったformValuesをUserEditRequestDtoに変換する関数
-const createUserEditRequestDto = (formValues: UserEditFormValues): UserEditRequestDto => ({
-  userid: formValues.userid,
-  username: formValues.username,
-  departmentname: formValues.departmentname,
-  sectionname: formValues.sectionname,
-  phone: formValues.phone,
-  address: formValues.address,
-});
 
 // フォームの各フィールドを1つのリアクティブなオブジェクトとして定義
 const initialData = props.user || defaultUser;
