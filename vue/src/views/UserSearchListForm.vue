@@ -1,39 +1,8 @@
 <script setup lang="ts">
 import axios from "axios";
-import { computed, ref } from 'vue'
-
-interface UserRow {
-  userid: string
-  username: string
-  departmentname: string
-  sectionname: string
-  phone: string
-  address: string
-}
-
-interface SearchConditions {
-  userid: string
-  username: string
-  departmentname: string
-  sectionname: string
-  phone: string
-  address: string
-}
-
-interface UserSearchListResponseDto {
-  totalCount: number
-  message: string
-  userList: UserRow[]
-}
-
-const defaultConditions: SearchConditions = {
-  userid: '',
-  username: '',
-  departmentname: '',
-  sectionname: '',
-  phone: '',
-  address: ''
-}
+import { ref, computed, onMounted } from 'vue'
+import { defaultConditions } from '../utils/userSearchListConv.ts'
+import type { SearchConditions, UserRow, UserSearchListResponseDto } from '../types/userSearchListTypes.ts'
 
 const conditions = ref<SearchConditions>({ ...defaultConditions })
 
@@ -94,13 +63,25 @@ const shouldShowVerticalScroll = computed(() => displayedUsers.value.length >= 6
 
 const normalize = (value: string): string => value.trim()
 
-// Searchボタン押下
-const doSearch = async (): Promise<void> => {
+// 初期表示時に実行される関数
+const doInitializeForm = () => {
+  // 初期値を設定
+  conditions.value = { ...defaultConditions }
+  // 表示されるユーザーリストを全件表示に戻す
+  displayedUsers.value = [...allUsers.value]
+};
 
+// 初期表示イベント
+onMounted(() => {
+  console.log('UserSearchListForm.vue mounted. Initializing form...');
+  doInitializeForm();
+});
+
+// Searchボタンのクリックイベントハンドラ
+const onSearch = async (): Promise<void> => {
   try {
     console.log('doSearch called with conditions:', conditions.value)
 
-    // searchlist APIにPOSTリクエストを送信
     const response = await axios.post<UserSearchListResponseDto>('http://localhost:8080/usersearch/searchlist', {
       userid: normalize(conditions.value.userid),
       username: normalize(conditions.value.username),
@@ -110,7 +91,6 @@ const doSearch = async (): Promise<void> => {
       address: normalize(conditions.value.address)
     })
 
-    // レスポンスのステータスコードをチェック
     if (response.status != 200) {
       throw new Error(`Search request failed: ${response.status}`)
     }
@@ -132,22 +112,20 @@ const doSearch = async (): Promise<void> => {
     })
 
     console.log('doSearch end')
-
   } catch (error) {
     console.error('User search failed', error)
     displayedUsers.value = []
   }
 }
 
-// Clearボタン押下
-const clearSearch = (): void => {
-  // 検索条件を初期化（defaultConditionsを分解してconditions.valueにコピー）
+// Clearボタンのクリックイベントハンドラ
+const onClear = (): void => {
+  // 条件をデフォルト値にリセット
   conditions.value = { ...defaultConditions }
-  // 検索結果を初期化（allUsers.valueを分解してdisplayedUsers.valueにコピー）
+  // 表示されるユーザーリストを全件表示に戻す
   displayedUsers.value = [...allUsers.value]
 }
 </script>
-
 <template>
   <main class="search-list-page">
     <section class="search-card fade-in-up">
@@ -189,8 +167,8 @@ const clearSearch = (): void => {
       </div>
 
       <div class="button-row">
-        <button type="button" class="button button-search" @click="doSearch">Search</button>
-        <button type="button" class="button button-clear" @click="clearSearch">Clear</button>
+        <button type="button" class="button button-search" @click="onSearch">Search</button>
+        <button type="button" class="button button-clear" @click="onClear">Clear</button>
       </div>
     </section>
 

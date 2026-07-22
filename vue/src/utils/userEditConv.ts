@@ -1,8 +1,8 @@
 /**
  * ユーザー編集フォームとAPI間のデータ変換ユーティリティ
  */
-import type { UserEditType, UserEditRequestDto, UserEditResponseDto } from '../types/userEdit';
-import type { UserEditFormValues } from '../validations/userEditRules';
+import type { UserEditType, UserEditRequestDto } from '../types/userEditTypes.ts';
+import type { UserEditFormValues } from '../validations/userEditRules.ts';
 
 /**
  * UserEditTypeからUserEditFormValuesに変換する関数

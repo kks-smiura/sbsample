@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import axios from "axios";
 import type { AxiosError, AxiosResponse } from "axios";
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useField, useForm } from 'vee-validate';
 import { userEditValidationSchema, type UserEditFormValues } from '../validations/userEditRules.ts';
-import type { UserEditType, UserEditResponseDto } from '../types/userEdit';
-import { defaultUser } from '../types/userEdit';
-import { createInitialValues, createUserEditRequestDto } from '../utils/userEditConverters';
+import type { UserEditType, UserEditResponseDto } from '../types/userEditTypes.ts';
+import { defaultUser } from '../types/userEditTypes.ts';
+import { createInitialValues, createUserEditRequestDto } from '../utils/userEditConv.ts';
 
 // インフォメーションメッセージ
 const infoMessage = ref<string>('');
@@ -19,10 +19,15 @@ const props = defineProps<{
 
 // フォームの各フィールドを1つのリアクティブなオブジェクトとして定義
 const initialData = props.user || defaultUser;
-const { errors, validate, resetForm, values } = useForm<UserEditFormValues>({
+// VeeValidateのuseFormを使用してフォームの状態を管理
+const form = useForm<UserEditFormValues>({
   validationSchema: userEditValidationSchema,
   initialValues: createInitialValues(initialData),
 });
+const errors = form.errors;       // バリデーションエラーの状態を取得
+const validate = form.validate;   // バリデーションを実行する関数
+const resetForm = form.resetForm  // フォームの状態をリセットする関数
+const values = form.values        // フォームの値をリアクティブに取得するオブジェクト
 
 // 各フィールドの値を個別に取得
 const { value: userid } = useField<string>('userid');
@@ -38,6 +43,20 @@ const validateForm = async (): Promise<boolean> => {
   errorMessages.value = Object.values(result.errors).filter((message): message is string => Boolean(message));
   return result.valid;
 };
+
+// 初期表示時に実行される関数
+const doInitializeForm = () => {
+  // 初期値を設定
+  resetForm({
+    values: createInitialValues(initialData),
+  });
+};
+
+// 初期表示イベント
+onMounted(() => {
+  console.log('UserEditForm.vue mounted. Initializing form...');
+  doInitializeForm();
+});
 
 // 変更を保存ボタン 正常終了イベント
 const onEntrySuccess = (response: AxiosResponse<UserEditResponseDto>) => {
@@ -135,7 +154,7 @@ const entryClick = async () => {
 
     <!-- ヘッダーエリア -->
     <div class="border-b border-blue-100 pb-4 mb-6">
-      <h2 class="text-xl font-bold text-blue-900">ユーザー情報編集</h2>
+      <h2 class="text-xl font-bold text-blue-900">User Edit</h2>
     </div>
 
     <!-- 編集フォーム -->
@@ -143,7 +162,7 @@ const entryClick = async () => {
       
       <!-- ユーザーID (読み取り専用) -->
       <div>
-        <label class="block text-sm font-medium text-blue-800 mb-1">ユーザーID</label>
+        <label class="block text-sm font-medium text-blue-800 mb-1">UserID</label>
         <input
           type="text"
           :value="userid"
@@ -155,7 +174,7 @@ const entryClick = async () => {
       <!-- ユーザー名 -->
       <div>
         <label class="block text-sm font-medium text-blue-800 mb-1">
-          ユーザー名 <span class="text-red-500">*</span>
+          Username <span class="text-red-500">*</span>
         </label>
         <input
           v-model="username"
@@ -172,7 +191,7 @@ const entryClick = async () => {
         <!-- 部名 -->
         <div>
           <label class="block text-sm font-medium text-blue-800 mb-1">
-            部名
+            Department
           </label>
           <input
             v-model="departmentname"
@@ -186,7 +205,7 @@ const entryClick = async () => {
 
         <!-- 課名 -->
         <div>
-          <label class="block text-sm font-medium text-blue-800 mb-1">課名</label>
+          <label class="block text-sm font-medium text-blue-800 mb-1">Section</label>
           <input
             v-model="sectionname"
             type="text"
@@ -199,7 +218,7 @@ const entryClick = async () => {
       <!-- 電話番号 -->
       <div>
         <label class="block text-sm font-medium text-blue-800 mb-1">
-          電話番号 <span class="text-red-500">*</span>
+          Phone <span class="text-red-500">*</span>
         </label>
         <input
           v-model="phone"
@@ -213,7 +232,7 @@ const entryClick = async () => {
 
       <!-- 住所 -->
       <div>
-        <label class="block text-sm font-medium text-blue-800 mb-1">住所</label>
+        <label class="block text-sm font-medium text-blue-800 mb-1">Address</label>
         <input
           v-model="address"
           type="text"
@@ -229,7 +248,7 @@ const entryClick = async () => {
           @click="submitType = 'entry'"
           class="px-5 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         >
-          変更を保存
+          Entry
         </button>
       </div>
 
